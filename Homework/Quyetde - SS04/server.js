@@ -1,7 +1,23 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
+const mongoose = require("mongoose")
 const app = express();
+
+const questionModel = require("./models/questionModel")
+
+questionModel.find({}, (err, questions) => {
+    if(err) console.log(err)
+    else console.log("List question: ", questions);
+});
+
+mongoose.connect(
+    "mongodb://localhost/quyetdeapp",
+    { useNewUrlParser: true },
+    (err) => {
+    if(err) console.log(err)
+    else console.log("DB connect success!");
+});
 
 app.use(bodyParser.urlencoded({ extended:false }));
 

@@ -1,7 +1,23 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
+const mongoose = require("mongoose")
 const app = express();
+
+const questionModel = require("./models/questionModel")
+
+questionModel.find({ }, (err, questions) => {
+    if(err) console.log(err)
+    else console.log("List question: ", questions);
+});
+
+mongoose.connect(
+    "mongodb://localhost/quyetdeapp",
+    { useNewUrlParser: true },
+    (err) => {
+    if(err) console.log(err)
+    else console.log("DB connect success!");
+});
 
 app.use(bodyParser.urlencoded({ extended:false }));
 
@@ -21,23 +37,43 @@ app.get("/ask", (req, res) => {
 
 app.post("/ask", (req, res) => {
     console.log(req.body);
-    const questions = JSON.parse(fs.readFileSync('./questions.json', "utf-8"));
-    console.log(questions, questions.length);
-    let newQuestion = {
-        id: questions.length,
-        yes: 0,
-        no: 0,
-        content: req.body.question
-    }
-    questions.push(newQuestion);
-    fs.writeFileSync("./questions.json", JSON.stringify(questions));
-    res.redirect("/");
+    // const questions = JSON.parse(fs.readFileSync('./questions.json', "utf-8"));
+    // console.log(questions, questions.length);
+    // let newQuestion = {
+    //     id: questions.length,
+    //     yes: 0,
+    //     no: 0,
+    //     content: req.body.question
+    // }
+    // questions.push(newQuestion);
+    // fs.writeFileSync("./questions.json", JSON.stringify(questions));
+    // res.redirect("/");
+
+    questionModel.create({ content: req.body.question }, (err,questionCreated) => {
+        if(err) console.log(err)
+        else console.log(questionCreated)
+    })
 })
 
+// questionModel.find({ }, (err, questions) => {
+//     if(err) console.log(err)
+//     else console.log("List question: ", questions);
+// });
+
 app.get("/randomquestion", (req, res) => {
-    const questions = JSON.parse(fs.readFileSync("./questions.json", "utf-8"));
-    const randomNum = Math.floor(Math.random()*questions.length);
-    res.json({ question: questions[randomNum] });
+    // const questions = JSON.parse(fs.readFileSync("./questions.json", "utf-8"));
+    // const randomNum = Math.floor(Math.random()*questions.length);
+    // res.json({ question: questions[randomNum] });
+    questionModel.count({}, (err, count) => {
+        if(err) console.log(err)
+        else {
+            const randomNum = Math.floor(Math.random()*count);
+            questionModel.findOne({}, null, { skip:randomNum }, (err, questionFound) => {
+                if(err) console.log(err)
+                else res.json({ question: questionFound });
+            });
+        }
+    })
 });
 
 app.get("/question/:questionId", (req, res) => {
