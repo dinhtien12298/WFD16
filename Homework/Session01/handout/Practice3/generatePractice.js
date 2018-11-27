@@ -33,7 +33,7 @@ function generate(testLengthArray){
   let objArr = [];
 
   for(let i = 0; i < testLengthArray.length; i ++) {
-    let arr= createInput(testLengthArray[i]);
+    let arr = createInput(testLengthArray[i]);
     let tar;
     switch( i % 3){
       case 0:
@@ -46,6 +46,7 @@ function generate(testLengthArray){
         tar = arr[0];
         break;
     }
+
     let res = search(arr, tar);
     let obj = {
       input: arr,
