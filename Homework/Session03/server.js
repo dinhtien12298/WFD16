@@ -15,27 +15,27 @@ app.get("/", (req, res) => {
 //     const { classname } = req.params;
 // app.get('/', (req,res) => {
 //     const { classname } = req.query;
-app.get('/detail/:class', (req, res) => {
-    const className = req.params.class;
-    axios({
-        url: 'https://btvn-web16s.herokuapp.com/' + className,
-        method: 'GET'
-    }).then(function(data) {
-        res.send(data.data);
-    })
-});
-
-// app.get('/', (req,res) => {
-//     const { classname } = req.query;
-//     axios({
-//         method: 'GET',
-//         url: `https://btvn-web16s.herokuapp.com/api/${classname}`,
-//     }).then(({ data }) => {
-//         const { students } = data;
-//         const studentHTML = students.map(student => `<li>${student}</li>`);
-//         res.send(`<ol>${studentHTML.join("")}</ol>`);
-//     });
+// app.get('/detail/:class', (req, res) => {
+//     const className = req.params.class;
+//     axios({ 
+//         url: 'https://btvn-web16s.herokuapp.com/' + className,
+//         method: 'GET'
+//     }).then(function(data) {
+//         res.send(data.data);
+//     })
 // });
+
+app.get('/', (req,res) => {
+    const { classname } = req.query;
+    axios({
+        method: 'GET',
+        url: `https://btvn-web16s.herokuapp.com/api/${classname}`,
+    }).then(({ data }) => {
+        const { students } = data;
+        const studentHTML = students.map(student => `<li>${student}</li>`);
+        res.send(`<ol>${studentHTML.join("")}</ol>`);
+    });
+});
 
 app.listen(7000, (err) => {
     if(err) console.log(err)
