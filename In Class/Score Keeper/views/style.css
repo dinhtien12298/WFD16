@@ -1,0 +1,11 @@
+.font-text{
+    font-family: 'Noto Sans TC', sans-serif;
+}
+
+.h-35px{
+    height: 35px;
+}
+
+#sumofscore{
+    background: rgb(199, 26, 118);
+}
