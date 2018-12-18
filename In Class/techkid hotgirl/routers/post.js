@@ -14,9 +14,18 @@ PostRouter.post("/", (req, res) => {
 
 // Find All
 PostRouter.get("/", (req, res) => {
-    PostModel.find({}, null, (err, postFound) => {
+    PostModel.find({}, {image: 1, description: 1, title: 1, author: 1})
+    .populate({
+        path: "author",
+        select: {
+            username: 1,
+            email: 1,
+            fullname: 1
+        }
+    })
+    .exec((err, posts) => {
         if(err) res.status(500).json({ success: 0, message: err })
-        else res.status(201).json({ posts: postFound });
+        else res.json({ success: 1, message: "Success!", data: posts });
     });
 });
 
@@ -25,7 +34,8 @@ PostRouter.get("/:id", (req, res) => {
     const id = req.params.id;
     PostModel.findById(id, (err, postFound) => {
         if(err) res.status(500).json({ success: 0, message: err })
-        else res.status(201).json({ posts: postFound });
+        else if(!postFound || !postFound._id) res.status(404).json({ success: 0, message: "Not found!" })
+        else res.status(201).json({ success: 1, message: "Success!", data: postFound });
     });
 });
 
@@ -33,9 +43,9 @@ PostRouter.get("/:id", (req, res) => {
 PostRouter.put("/:id", (req, res) => {
     const id = req.params.id;
     const updatePost = req.body;
-    PostModel.findByIdAndUpdate(id, updatePost, (err, postFound) => {
+    PostModel.findByIdAndUpdate(id, { $set: updatePost }, { new: true }, (err, postFound) => {
         if(err) res.status(500).json({ success: 0, message: err })
-        else res.status(201).json({ success: 1, message: "Update success!!" });
+        else res.status(201).json({ success: 1, message: "Update success!!", data: postUpdated });
     });
 });
 
