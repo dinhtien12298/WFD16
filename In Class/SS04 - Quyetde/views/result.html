@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Quyetde</title>
 </head>
 <body>
@@ -13,6 +10,32 @@
     <p id="voteNo">No: <span></span>%</p>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="result.js"></script>
+    <script>
+        const params = new URL(window.location.href).pathname.split("/");
+        const questionId = params[params.length - 1];
+
+        $.ajax({
+            url: "http://localhost:5000/question/" + questionId,
+            type: "GET",
+            success: function(data){
+                if (data) {
+                    console.log(data);
+                    let question = data.question;
+                    let content = question.content;
+                    let voteYes = question.yes;
+                    let voteNo = question.no;
+                    let totalVote = voteYes + voteNo;
+            
+                    $("#questionContent").text(content);
+                    $("#totalVote").text(totalVote);
+                    $("#voteYes").text(voteYes);
+                    $("#voteNo").text(voteNo);
+                }
+            },
+            error: function(err){
+                console.log(err);
+            }
+        });
+    </script>
 </body>
 </html>

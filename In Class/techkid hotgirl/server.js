@@ -36,6 +36,10 @@ app.use((req, res, next) => {
     next();
 })
 
+app.get("/loginsuccess", (req, res, next) => {
+    res.send("Login Success")
+})
+
 const UserModel = require("./models/user");
 
 app.get("/login", (req, res) => {
