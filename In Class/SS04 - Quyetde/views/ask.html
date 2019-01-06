@@ -1,18 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Import Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    
+    <!-- Import Icon -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 
-    <title>Hỏi nhanh</title>
+    <!-- Import Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+    <!-- Import CSS -->
+    <link rel="stylesheet" href="./style.css">
+
+    <!-- Logo -->
+    <link rel="icon" href="./logo.png">
+
+    <!-- Title -->
+    <title>Quyetde</title>
 </head>
 <body>
-    <form action="/ask" method="post">
-        <h3>Hãy hỏi cộng đồng một câu hỏi Đúng/Sai hoặc Có/Không</h3>
-        <textarea name="question" id="textInput" cols="30" rows="10" maxlength="200"></textarea>
-        <p id="remain">Còn 200/200 ký tự</p>
-        <button type="submit">Gửi</button>
-    </form>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark font-text">
+        <a class="navbar-brand" href="/">Quyết.đê!</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/ask">Hỏi nhanh</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Đáp gọn</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="ask container col-10 font-text">
+        <form action="/ask" method="post">
+            <h3>Hãy hỏi cộng đồng một câu hỏi Đúng/Sai hoặc Có/Không</h3>
+            <textarea class="border border-secondary rounded" name="question" id="textInput" cols="135" rows="5" maxlength="200"></textarea>
+            <p id="remain">Còn 200/200 ký tự</p>
+            <button class="btn btn-info" type="submit">Gửi</button>
+        </form>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="ask.js"></script>
