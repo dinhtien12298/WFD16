@@ -1,6 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
+const mongoose = require("mongoose");
+const QuestionModel = require("./models/questionModel");
+
+mongoose.connect("mongodb://localhost/quyetde", (err) => {
+    if(err) console.log(err);
+    else console.log("Database connect success!!");
+})
 
 let app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -15,40 +22,45 @@ app.get("/ask", (req, res) => {
 })
 
 app.post("/ask", (req, res) => {
-    const questions = JSON.parse(fs.readFileSync("questions.json", "utf-8"));
-    let newQuestion = {
-        id: questions.length,
-        content: req.body.question,
-        yes: 0,
-        no: 0,
-    };
-    questions.push(newQuestion);
-    fs.writeFileSync("questions.json", JSON.stringify(questions));
-    res.redirect("/");
+    QuestionModel.create(
+        { questionContent: req.body.question },
+        (err, questionCreated) => {
+            if(err) console.log(err)
+            else res.redirect(`/result/${questionCreated._id}`);
+        }
+    )
 })
 
 app.get("/randomquestion", (req, res) => {
-    const questions = JSON.parse(fs.readFileSync("questions.json", "utf-8"));
-    const randomNum = Math.floor(Math.random() * questions.length);
-    const questionFound = questions[randomNum];
-    res.send({ question: questionFound });
+    QuestionModel.count({}, (err, count) => {
+        const randomNum = Math.floor(Math.random() * count);
+
+        QuestionModel.findOne({}, null, { skip: randomNum }, (err, questionFound) => {
+            if (err) console.log(err);
+            else res.send( questionFound );
+        })
+    })
 })
 
 app.get("/question/:questionId", (req, res) => {
     const questionId = req.params.questionId;
-    const questions = JSON.parse(fs.readFileSync("questions.json", "utf-8"));
-    const questionFound = questions[questionId];
-    res.send({ question: questionFound });
+    QuestionModel.findById(questionId, (err, questionFound) => {
+        if (err) console.log(err)
+        else res.send( questionFound );
+    })
 })
 
 app.post("/answer", (req, res) => {
     const questionId = req.body.questionId;
     const vote = req.body.vote;
-    const questions = JSON.parse(fs.readFileSync("questions.json", "utf-8"));
-    if (vote == "yes") questions[questionId].yes += 1
-    else questions[questionId].no += 1;
-    fs.writeFileSync("questions.json", JSON.stringify(questions));
-    res.redirect(`http://localhost:5000/question/${questionId}`);
+    QuestionModel.findByIdAndUpdate(
+        questionId, 
+        { $inc: vote == "yes" ? { "yes": 1 } : { "no": 1 } }, 
+        (err, questionUpdated) => {
+            if (err) console.log(err)
+            else res.send( questionUpdated );
+        }
+    )
 })
 
 app.get("/result/:questionId", (req, res) => {

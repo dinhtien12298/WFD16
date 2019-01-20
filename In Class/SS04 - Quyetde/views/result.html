@@ -55,20 +55,26 @@
         $.ajax({
             url: `/question/${questionId}`,
             type: "GET",
-            success: function(data){
-                if (data) {
-                    let question = data.question;
-                    let content = question.content;
+            success: function(question){
+                if (question) {
+                    let content = question.questionContent;
                     let voteYes = question.yes;
                     let voteNo = question.no;
                     let totalVote = voteYes + voteNo;
             
                     $("#questionContent").text(content);
                     $("#totalVote").text(totalVote);
-                    $("#voteYes").text((voteYes*100/totalVote).toFixed(2));
-                    $("#voteNo").text((voteNo*100/totalVote).toFixed(2));
-                    document.getElementById('voteYes').style.width = `${(voteYes*100/totalVote).toFixed(2)}%`;
-                    document.getElementById('voteNo').style.width = `${(voteNo*100/totalVote).toFixed(2)}%`;
+                    if (totalVote == 0) {
+                        $("#voteYes").text('0%');
+                        $("#voteNo").text('0%');
+                        document.getElementById('voteYes').style.width = `50%`;
+                        document.getElementById('voteNo').style.width = `50%`;
+                    } else {
+                        $("#voteYes").text(`${(voteYes*100/totalVote).toFixed(2)}%`);
+                        $("#voteNo").text(`${(voteNo*100/totalVote).toFixed(2)}%`);
+                        document.getElementById('voteYes').style.width = `${(voteYes*100/totalVote).toFixed(2)}%`;
+                        document.getElementById('voteNo').style.width = `${(voteNo*100/totalVote).toFixed(2)}%`;
+                    }
                 }
             },
             error: function(err){

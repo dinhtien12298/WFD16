@@ -1,9 +1,9 @@
 $.ajax({
     url: "/randomquestion",
     type: "GET",
-    success: function(data){
-        $("#question").text(data.question.content);
-        $("#question").attr("data-question", data.question.id);
+    success: function(question){
+        $("#question").text(question.questionContent);
+        $("#question").attr("data-question", question._id);
     },
     error: function(err){
         console.log(err);
@@ -16,10 +16,10 @@ $("#no, #yes").on("click", function(){
         type: "POST",
         data: {
             questionId: $("#question").attr("data-question"),
-            vote: $(this).attr("id")
+            vote: $(this).attr("_id")
         },
-        success: function(data) {
-            window.location.href = `/result/${data.question.id}`;
+        success: function(question) {
+            window.location.href = `/result/${question._id}`;
         },
         error: function(err) {
             console.log(err);

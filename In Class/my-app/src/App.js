@@ -1,37 +1,35 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+// import imagesData from './data/imagesData.json';
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import CountNumber from './components/CountNumber';
+import axios from './axios';
+import NavBar from './components/NavBar';
+import GirlImage from './components/GirlImage'
 
 class App extends Component {
   state = {
-    countNum: 6
+    images: []
   }
 
-  // constructor(props) {
-  //   super(props);
-
-  //   this.state = {
-  //     countNum: 6
-  //   }
-
-  //   this.addOne = this.addOne.bind(this);
-  // }
-
-  addOne = () => {
-    // const randomNum = Math.floor(Math.random()*100);
-    this.setState({ countNum: this.state.countNum + 1 });
+  componentDidMount() {
+    axios
+    .get("/api/images")
+    .then(data => {
+      console.log(data.data);
+      setTimeout(() => {
+        this.setState({ images: data.data });
+      }, 1000);
+    })
+    .catch(err => console.log(err));
   }
 
   render() {
-    console.log(this.state.countNumber);
+    const allImage = this.state.images.map(img => <GirlImage key={img._id} img={img} />)
+    
     return (
-      <div className="App">
-        <header className="App-header">
-          <CountNumber countNum={this.state.countNum}/>
-          <br/>
-          <button onClick={this.addOne}>Add 1</button>
-        </header>
+      <div className="app">
+        <NavBar img="this.state.images" />
+        {allImage}
       </div>
     );
   }
